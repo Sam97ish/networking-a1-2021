@@ -2,8 +2,10 @@
   UDPEchoClient.java
   A simple echo client with no error handling
 */
+//192.168.56.102
 
 package dv201.labb2;
+import javax.annotation.processing.SupportedSourceVersion;
 import java.io.IOException;
 import java.net.*;
 
@@ -62,10 +64,18 @@ public class UDPEchoClient {
 			else
 				System.out.printf("Sent and received msg not equal!\n");
 			socket.close();
-		}catch(Exception e){
-    		System.err.println("Could not create and send packet, check IP and port: " + args[0] + ", "+ args[1]);
+		}catch(SocketException e){
+			System.err.println("could not create the socket successfully, check the IP or the port: "+ args[0] + ", "+ args[1]);
     		e.printStackTrace();
     		System.exit(2);
+		}catch(IOException e){
+			System.err.println("Could not send or receive packet, check IP and port: " + args[0] + ", "+ args[1]);
+			e.printStackTrace();
+			System.exit(3);
+    	}catch(Exception e){
+    		System.err.println("Could not create nor send packet, check IP and port: " + args[0] + ", "+ args[1]);
+    		e.printStackTrace();
+    		System.exit(4);
 		}
 	}
 
