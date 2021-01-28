@@ -11,11 +11,16 @@ public class UDPEchoServer extends Networking {
 	public static int BUFSIZE; //now given from the first argument arg[0].
 	public static final int MYPORT = 4950;
 
+	/**
+	 * Constructor
+	 * @param ip : provided ip in the arguments.
+	 * @param port : provided port in the arguments.
+	 */
 	public UDPEchoServer(String ip, int port) {
 		super(ip, port);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 
 		if (args.length != 1) {
 			System.err.printf("usage: %s bufferSize\n", args[1]);
@@ -23,9 +28,17 @@ public class UDPEchoServer extends Networking {
 		}
 		BUFSIZE = Integer.valueOf(args[0]);
 
-		UDPEchoServer server = new UDPEchoServer(java.net.Inet4Address.getLocalHost().getHostAddress(), MYPORT);
+		UDPEchoServer server = null;
+		try {
+			server = new UDPEchoServer(Inet4Address.getLocalHost().getHostAddress(), MYPORT);
+			server.contact();
+		} catch (UnknownHostException e) {
+			System.err.println("Could not create UDP server!");
+			e.printStackTrace();
+			System.exit(5);
+		}
 
-		server.contact();
+
 
 	}
 
