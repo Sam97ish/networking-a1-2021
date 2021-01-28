@@ -17,47 +17,47 @@ public class UDPEchoClient extends Networking {
 	private static double transferSec = 1;
 
 	//Getters and setters for the private attributes.
-	public static int getBUFSIZE() {
+	public  int getBUFSIZE() {
 		return BUFSIZE;
 	}
 
-	public static void setBUFSIZE(int BUFSIZE) {
+	public  void setBUFSIZE(int BUFSIZE) {
 		UDPEchoClient.BUFSIZE = BUFSIZE;
 	}
 
-	public static int getMYPORT() {
+	public  int getMYPORT() {
 		return MYPORT;
 	}
 
-	public static void setMYPORT(int MYPORT) {
+	public  void setMYPORT(int MYPORT) {
 		UDPEchoClient.MYPORT = MYPORT;
 	}
 
-	public static String getIP() {
+	public  String getIP() {
 		return IP;
 	}
 
-	public static void setIP(String IP) {
+	public  void setIP(String IP) {
 		UDPEchoClient.IP = IP;
 	}
 
-	public static String getMSG() {
+	public  String getMSG() {
 		return MSG;
 	}
 
-	public static double getDelay() {
+	public  double getDelay() {
 		return delay;
 	}
 
-	public static void setDelay(double delay) {
+	public  void setDelay(double delay) {
 		UDPEchoClient.delay = delay;
 	}
 
-	public static double getTransferSec() {
+	public  double getTransferSec() {
 		return transferSec;
 	}
 
-	public static void setTransferSec(double transferSec) {
+	public  void setTransferSec(double transferSec) {
 		UDPEchoClient.transferSec = transferSec;
 	}
 
@@ -74,26 +74,24 @@ public class UDPEchoClient extends Networking {
 	/**
 	 * @role: creates, sends and receive UDP packets using UDP sockets.
 	 * @return: void.
-	 * @param args: list from commandline.
 	 * @throws IOException : check ip, port.
 	 */
-    public static void sendUDPPacket(String[] args){
+    public  void contact(){
     	try {
-			BUFSIZE = Integer.valueOf(args[2]); //received now from arguments due to problem 2.
 
-			byte[] buf = new byte[BUFSIZE];
+			byte[] buf = new byte[getBUFSIZE()];
 
 			/* Create socket */
 			DatagramSocket socket = new DatagramSocket(null);
 
 			/* Create local endpoint using bind() */
-			SocketAddress localBindPoint = new InetSocketAddress(MYPORT);
+			SocketAddress localBindPoint = new InetSocketAddress(getMYPORT());
 			socket.bind(localBindPoint);
 
 			/* Create remote endpoint */
 			SocketAddress remoteBindPoint =
-					new InetSocketAddress(args[0],
-							Integer.valueOf(args[1]));
+					new InetSocketAddress(getIP(),
+							getMYPORT());
 
 			/* Create datagram packet for sending message */
 			DatagramPacket sendPacket =
@@ -119,22 +117,22 @@ public class UDPEchoClient extends Networking {
 				System.out.printf("Sent and received msg not equal!\n");
 			socket.close();
 		}catch(SocketException e){
-			System.err.println("could not create the socket successfully, check the IP or the port: "+ args[0] + ", "+ args[1]);
+			System.err.println("could not create the socket successfully, check the IP or the port: "+ getIP() + ", "+ getMYPORT());
     		e.printStackTrace();
     		System.exit(2);
 		}catch(IOException e){
-			System.err.println("Could not send or receive packet, check IP and port: " + args[0] + ", "+ args[1]);
+			System.err.println("Could not send or receive packet, check IP and port: " + getIP() + ", "+ getMYPORT());
 			e.printStackTrace();
 			System.exit(3);
     	}catch(Exception e){
-    		System.err.println("Could not create nor send packet, check IP and port: " + args[0] + ", "+ args[1]);
+    		System.err.println("Could not create nor send packet, check IP and port: " + getIP() + ", "+ getMYPORT());
     		e.printStackTrace();
     		System.exit(4);
 		}
 	}
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
 
     	//Checking if arguments are provided.
 		if (args.length != 4) {
@@ -143,13 +141,14 @@ public class UDPEchoClient extends Networking {
 		}
 
 		//Gathering information from arguments.
-		IP = args[0];
-		MYPORT = Integer.valueOf(args[1]);
-		BUFSIZE = Integer.valueOf(args[2]);
-		transferSec = Integer.valueOf(args[3]);
+		IP = args[0]; //getting the ip from the first argument.
+		MYPORT = Integer.valueOf(args[1]); // port from the second argument.
 
 		//Creating a new client instance.
 		UDPEchoClient client = new UDPEchoClient(IP,MYPORT);
+
+		client.setBUFSIZE(Integer.valueOf(args[2])); //buffer size from the third argument.
+		client.setTransferSec(Integer.valueOf(args[3])); // transfer rate from the fifth argument.
 
 		//This is used for pausing.
 		if(transferSec != 0)
@@ -163,9 +162,9 @@ public class UDPEchoClient extends Networking {
 			//Used for pausing.
 			double diff = System.currentTimeMillis();
 
-			client.sendPacket();
-			client.receivePacket();
-			//sendUDPPacket(args);
+
+			client.contact();// creates UDP socket and sends message, receives reply from server.
+
 			numPackets++;
 
 			/*
@@ -194,105 +193,4 @@ public class UDPEchoClient extends Networking {
 
     }
 
-
-	/**
-	 * @role: sends packet to destination according to the arguments given.
-	 * @return: void.
-	 */
-	@Override
-	public void sendPacket() {
-
-		try {
-			byte[] buf = new byte[getBUFSIZE()];
-
-			/* Create socket */
-			DatagramSocket socket = new DatagramSocket(null);
-
-			/* Create local endpoint using bind() */
-			SocketAddress localBindPoint = new InetSocketAddress(getMYPORT());
-			socket.bind(localBindPoint);
-
-			/* Create remote endpoint */
-			SocketAddress remoteBindPoint =
-					new InetSocketAddress(getIP(),
-							getMYPORT());
-
-			/* Create datagram packet for sending message */
-			DatagramPacket sendPacket =
-					new DatagramPacket(getMSG().getBytes(),
-							getMSG().length(),
-							remoteBindPoint);
-
-			/* Create datagram packet for receiving echoed message */
-			DatagramPacket receivePacket = new DatagramPacket(buf, buf.length);
-
-			/* Send message*/
-			socket.send(sendPacket);
-
-			//closing socket.
-			socket.close();
-		}catch(SocketException e){
-			System.err.println("could not create the socket successfully, check the IP or the port: "+ getIP() + ", "+ getMYPORT());
-			e.printStackTrace();
-			System.exit(2);
-		}catch(IOException e){
-			System.err.println("Could not send packet, check IP and port: " + getIP() + ", "+ getMYPORT());
-			e.printStackTrace();
-			System.exit(3);
-		}catch(Exception e){
-			System.err.println("Could not create nor send packet, check IP and port: " + getIP() + ", "+ getMYPORT());
-			e.printStackTrace();
-			System.exit(4);
-		}
-
-    }
-
-	/**
-	 * @role: receives packet according to the arguments given, then compares to see if it's the same..
-	 * @return: void.
-	 */
-	@Override
-	public void receivePacket() {
-		try {
-			byte[] buf = new byte[getBUFSIZE()];
-
-			/* Create socket */
-			DatagramSocket socket = new DatagramSocket(null);
-
-			/* Create local endpoint using bind() */
-			SocketAddress localBindPoint = new InetSocketAddress(getMYPORT());
-			socket.bind(localBindPoint);
-
-			/* Create datagram packet for receiving echoed message */
-			DatagramPacket receivePacket = new DatagramPacket(buf, buf.length);
-
-			/*receive message*/
-			socket.receive(receivePacket);
-
-			/* Compare sent and received message */
-			String receivedString =
-					new String(receivePacket.getData(),
-							receivePacket.getOffset(),
-							receivePacket.getLength());
-			if (receivedString.compareTo(getMSG()) == 0)
-				System.out.printf("%d bytes sent and received\n", receivePacket.getLength());
-			else
-				System.out.printf("Sent and received msg not equal!\n");
-
-			socket.close();
-
-		}catch(SocketException e){
-			System.err.println("could not create the socket successfully, check the IP or the port: "+ getIP() + ", "+ getMYPORT());
-			e.printStackTrace();
-			System.exit(5);
-		}catch(IOException e){
-			System.err.println("Could not receive packet, check IP and port: " + getIP() + ", "+ getMYPORT());
-			e.printStackTrace();
-			System.exit(6);
-		}catch(Exception e){
-			System.err.println("Could not create nor send packet, check IP and port: " + getIP() + ", "+ getMYPORT());
-			e.printStackTrace();
-			System.exit(7);
-		}
-	}
 }

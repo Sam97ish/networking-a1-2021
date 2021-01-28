@@ -8,22 +8,21 @@ abstract public class Networking {
         MYPORT = port; IP = ip;
     }
 
-    public static String getIP() {
+    public String getIP() {
         return IP;
     }
 
-    public static void setIP(String IP) {
+    public void setIP(String IP) {
         Networking.IP = IP;
     }
 
-    public static int getMYPORT() {
+    public int getMYPORT() {
         return MYPORT;
     }
 
-    public static void setMYPORT(int MYPORT) {
+    public void setMYPORT(int MYPORT) {
         Networking.MYPORT = MYPORT;
     }
 
-    abstract public void sendPacket();
-    abstract public void receivePacket();
+    abstract void contact(); //a method that starts a connection either with UDP or TCP.
 }
