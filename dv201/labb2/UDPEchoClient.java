@@ -12,7 +12,7 @@ public class UDPEchoClient extends Networking {
     private static int BUFSIZE; //third argument in command line arg[2] due to problem 2.
     private static int MYPORT= 0;
     private static String IP;
-    private static final String MSG= "An Echo Message!";
+    private static String MSG= "An Echo Message!";
 	private static double delay = 1;
 	private static double transferSec = 1;
 
@@ -135,20 +135,22 @@ public class UDPEchoClient extends Networking {
     public static void main(String[] args){
 
     	//Checking if arguments are provided.
-		if (args.length != 4) {
-			System.err.printf("usage: %s server_name port bufferSize msgTransferRate\n", args[1]);
+		if (args.length != 5) {
+			System.err.printf("usage: %s server_name port bufferSize msgTransferRate the_message\n", args[1]);
 			System.exit(1);
 		}
 
 		//Gathering information from arguments.
 		IP = args[0]; //getting the ip from the first argument.
 		MYPORT = Integer.valueOf(args[1]); // port from the second argument.
+		MSG = args[4];
 
 		//Creating a new client instance.
 		UDPEchoClient client = new UDPEchoClient(IP,MYPORT);
 
 		client.setBUFSIZE(Integer.valueOf(args[2])); //buffer size from the third argument.
 		client.setTransferSec(Integer.valueOf(args[3])); // transfer rate from the fifth argument.
+
 
 		//This is used for pausing.
 		if(transferSec != 0)
