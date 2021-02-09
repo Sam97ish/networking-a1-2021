@@ -1,10 +1,8 @@
 package dv201.labb2;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 
 public class TCPEchoServer extends Networking{
     public static int BUFSIZE;
@@ -62,6 +60,31 @@ public class TCPEchoServer extends Networking{
 
             try {
                 while(true) {
+
+                    byte[] buf = new byte[BUFSIZE];
+
+                    //input stream to receive messages.
+                    InputStream input = client.getInputStream();
+                    int bytesRead = input.read(buf);
+
+                    //string received.
+                    String receivedMSG = new String(buf,0,bytesRead);
+
+                    //check if all the message is received
+                    while(input.available()>0){
+                        bytesRead = input.read(buf);
+                        receivedMSG += new String(buf,0,bytesRead);
+                    }
+
+                    //Sending received message
+                    OutputStream output = client.getOutputStream();
+                    output.write(receivedMSG.getBytes(),0,receivedMSG.length());
+                    output.flush();
+
+                    System.out.printf("TCP echo request from %s", client.getInetAddress().getHostAddress());
+                    System.out.printf(" using port %d\n", client.getPort());
+
+                    /*
                     InputStreamReader in = new InputStreamReader(client.getInputStream());
                     BufferedReader bf = new BufferedReader(in,BUFSIZE);
 
@@ -70,11 +93,17 @@ public class TCPEchoServer extends Networking{
                     PrintWriter pw = new PrintWriter(client.getOutputStream());
                     pw.println(msg);
                     pw.flush();
+
+                     */
+
                 }
             } catch (IOException e) {
                 System.err.println("Could not send or receive data, check IP and port " );
                 e.printStackTrace();
                 System.exit(3);
+            }catch(Exception e){
+                System.err.println("Connection was lost");
+                System.exit(10);
             }
 
 

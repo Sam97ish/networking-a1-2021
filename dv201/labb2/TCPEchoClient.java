@@ -1,9 +1,7 @@
 package dv201.labb2;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 
 public class TCPEchoClient extends Networking {
     private static int BUFSIZE;
@@ -89,18 +87,27 @@ public class TCPEchoClient extends Networking {
     @Override
      public void contact() {
         try {
-            PrintWriter pr = new PrintWriter(soc.getOutputStream());
-            pr.println(MSG);
-            pr.flush();
+            byte[] buf = new byte[BUFSIZE];
 
-            InputStreamReader in = new InputStreamReader(soc.getInputStream());
-            BufferedReader bf = new BufferedReader(in,BUFSIZE);
+            //send message
+            OutputStream output = soc.getOutputStream();
+            output.write(MSG.getBytes(),0,MSG.length());
+            output.flush();
 
+            //Input stream to receive messages.
+            InputStream input = soc.getInputStream();
+            int bytesRead = input.read(buf);
 
-            String recivedMsg = bf.readLine();
+            String recivedMsg = new String(buf,0,bytesRead);
+
+            //check if all the message is received
+            while(input.available()>0){
+                bytesRead = input.read(buf);
+                recivedMsg += new String(buf,0,bytesRead);
+            }
 
             if (recivedMsg.compareTo(MSG) == 0)
-                System.out.printf("%d bits sent and received\n", BUFSIZE);
+                System.out.printf("%d bits sent and received and the message is: %s\n", recivedMsg.length(),recivedMsg);
             else
                 System.out.printf("Sent and received msg not equal!\n");
 

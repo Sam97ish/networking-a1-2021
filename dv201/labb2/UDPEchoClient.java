@@ -112,7 +112,7 @@ public class UDPEchoClient extends Networking {
 							receivePacket.getOffset(),
 							receivePacket.getLength());
 			if (receivedString.compareTo(MSG) == 0)
-				System.out.printf("%d bytes sent and received\n", receivePacket.getLength());
+				System.out.printf("%d bytes sent and received\n", receivedString.length());
 			else
 				System.out.printf("Sent and received msg not equal!\n");
 			socket.close();
