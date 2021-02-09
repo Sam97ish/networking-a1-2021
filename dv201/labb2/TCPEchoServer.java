@@ -72,11 +72,6 @@ public class TCPEchoServer extends Networking{
                     //string received.
                     String receivedMSG = new String(buf,0,bytesRead);
 
-                    //check if all the message is received
-                    while(input.available()>0){
-                        bytesRead = input.read(buf);
-                        receivedMSG += new String(buf,0,bytesRead);
-                    }
 
                     //Sending received message
                     OutputStream output = client.getOutputStream();
