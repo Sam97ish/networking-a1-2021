@@ -30,7 +30,9 @@ public class UDPEchoServer extends Networking {
 
 		UDPEchoServer server = null;
 		try {
+			//create new server.
 			server = new UDPEchoServer(Inet4Address.getLocalHost().getHostAddress(), MYPORT);
+			//start listening and handling messages.
 			server.contact();
 		} catch (UnknownHostException e) {
 			System.err.println("Could not create UDP server!");

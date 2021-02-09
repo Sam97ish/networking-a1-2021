@@ -25,8 +25,10 @@ public class TCPEchoServer extends Networking{
     @Override
     void contact() {
         try{
+            //create a new server socket.
             ServerSocket ss = new ServerSocket(MYPORT);
 
+            //start listening from here, creating a new socket using serverSocket everytime a new client contacts.
             while(true) {
 
                 Socket s = ss.accept(); //connect with next client.
@@ -84,18 +86,6 @@ public class TCPEchoServer extends Networking{
                     System.out.printf("TCP echo request from %s", client.getInetAddress().getHostAddress());
                     System.out.printf(" using port %d\n", client.getPort());
 
-                    /*
-                    InputStreamReader in = new InputStreamReader(client.getInputStream());
-                    BufferedReader bf = new BufferedReader(in,BUFSIZE);
-
-                    String msg = bf.readLine();
-
-                    PrintWriter pw = new PrintWriter(client.getOutputStream());
-                    pw.println(msg);
-                    pw.flush();
-
-                     */
-
                 }
             } catch (IOException e) {
                 System.err.println("Could not send or receive data, check IP and port " );
@@ -111,6 +101,8 @@ public class TCPEchoServer extends Networking{
     }
 
     public static void main(String[] args){
+
+        //checking if all arguments are met.
         if (args.length != 1) {
             System.err.printf("usage: %s bufferSize\n", args[1]);
             System.exit(1);
@@ -120,7 +112,9 @@ public class TCPEchoServer extends Networking{
 
         TCPEchoServer server = null;
         try {
+            //create new TCP server.
             server = new TCPEchoServer(Inet4Address.getLocalHost().getHostAddress(), MYPORT);
+            //start listening and handling clients.
             server.contact();
         } catch (UnknownHostException e) {
             System.err.println("Could not create TCP server!");
