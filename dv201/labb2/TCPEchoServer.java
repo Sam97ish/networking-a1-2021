@@ -1,5 +1,11 @@
-package dv201.labb2;
+/*
+  TCPEchoServer.java
+  A simple echo server with error handling
+  Author: Husmu Aldeen ALKHAFAJI - ha223cz.
+*/
 
+
+package dv201.labb2;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;

@@ -1,6 +1,7 @@
 /*
   UDPEchoServer.java
-  A simple echo server with no error handling
+  A simple echo server with error handling
+  Author: Husmu Aldeen ALKHAFAJI - ha223cz.
 */
 
 package dv201.labb2;

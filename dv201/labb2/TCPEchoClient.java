@@ -1,7 +1,13 @@
+/*
+  TCPEchoClient.java
+  A simple echo client with error handling
+  Author: Husmu Aldeen ALKHAFAJI - ha223cz.
+*/
+
+
 package dv201.labb2;
 import java.io.*;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 
 public class TCPEchoClient extends Networking {
     private static int BUFSIZE;
@@ -142,8 +148,12 @@ public class TCPEchoClient extends Networking {
             client.setSoc(soc);
 
             //This is used for pausing.
-            if(transferSec != 0)
-                delay = 1000/transferSec;
+            if(transferSec > 0) {
+                delay = 1000 / transferSec;
+            }else if(transferSec < 0){ //checking if transfer rate is negative.
+                System.err.println("The transfer rate per second cannot be negative.");
+                System.exit(11);
+            }
 
             //Used for VG-Task1.
             int numPackets = 0;

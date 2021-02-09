@@ -1,8 +1,9 @@
 /*
   UDPEchoClient.java
-  A simple echo client with no error handling
+  A simple echo client with error handling
+  Author: Husmu Aldeen ALKHAFAJI - ha223cz.
 */
-//192.168.56.102
+
 
 package dv201.labb2;
 import java.io.IOException;
@@ -153,8 +154,12 @@ public class UDPEchoClient extends Networking {
 
 
 		//This is used for pausing.
-		if(transferSec != 0)
-			 delay = 1000/transferSec;
+		if(transferSec > 0) {
+			delay = 1000 / transferSec;
+		}else if(transferSec < 0){
+			System.err.println("The transfer rate per second cannot be negative.");
+			System.exit(11);
+		}
 
 		//Used for VG-Task1.
 		int numPackets = 0;
