@@ -41,7 +41,9 @@ public class TCPEchoServer extends Networking{
 
                 Handler h = new Handler(s);//hand it over to client thread.
 
-                h.run();//thread starts.
+                Thread client = new Thread(h);
+
+                client.start();//thread starts.
             }
 
         } catch (IOException e) {
